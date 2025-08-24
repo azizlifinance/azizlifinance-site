@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Azizli Finance</title>
+  <style>
+    :root { --bg:#0b1220; --card:#121a2a; --text:#e7ecf5; --muted:#9fb0c9; --accent:#4da3ff; --border:#1f2a44; }
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,Segoe UI,Roboto,Arial}
+    .wrap{max-width:1100px;margin:48px auto;padding:0 20px}
+    header{margin-bottom:20px}
+    h1{margin:0 0 4px 0;font-size:28px}
+    .layout{display:grid;grid-template-columns:260px 1fr;gap:24px}
+    .sidebar{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;height:max-content;position:sticky;top:24px}
+    .sidebar h2{margin:0 0 10px 0;font-size:18px}
+    .links{list-style:none;padding:0;margin:0}
+    .links li{margin:6px 0}
+    .links a{color:var(--text);text-decoration:none;border-bottom:1px dashed #2b3b5f}
+    .links a:hover{color:#fff;border-color:var(--accent)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px}
+    .card h2{margin:0 0 6px 0;font-size:18px}
+    .card p{margin:8px 0 14px 0;color:var(--muted)}
+    .btn{display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid #2b3b5f;color:var(--text);text-decoration:none}
+    .btn:hover{border-color:var(--accent);color:#fff}
+    .badge{display:inline-block;background:#1b2a49;color:#b9c7de;border:1px solid #2d3d61;border-radius:999px;padding:2px 8px;font-size:12px;margin-left:8px}
+    footer{margin-top:36px;color:var(--muted);text-align:right;font-style:italic}
+    @media (max-width: 860px){ .layout{grid-template-columns:1fr} .sidebar{position:static} }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Azizli Finance</h1>
+      <p style="color:var(--muted);margin:6px 0 0 0">Tools & calculators</p>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>Useful links</h2>
+        <ul class="links">
+          <!-- Replace with your first real link -->
+          <li><a href="https://example.com" target="_blank" rel="noopener">Your first link label</a></li>
+        </ul>
+      </aside>
+
+      <main>
+        <div class="grid">
+          <div class="card">
+            <h2>Stock Dashboard <span class="badge">Live</span></h2>
+            <p>Track prices, day change, % change, and overlay history charts.</p>
+            <a class="btn" href="https://app.azizlifinance.com" target="_blank" rel="noopener">Open</a>
+          </div>
+          <div class="card">
+            <h2>Mortgage Calculator <span class="badge">Coming soon</span></h2>
+            <p>Payments by rate, term, taxes & insurance, amortization table.</p>
+            <a class="btn" href="#" onclick="alert('Coming soon!')">Preview</a>
+          </div>
+          <div class="card">
+            <h2>Auto Payment Calculator <span class="badge">Coming soon</span></h2>
+            <p>Monthly payments by price, APR, term, down payment & trade-in.</p>
+            <a class="btn" href="#" onclick="alert('Coming soon!')">Preview</a>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <footer>Azizli Finance</footer>
+  </div>
+</body>
+</html>
