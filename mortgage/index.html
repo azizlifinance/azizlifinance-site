@@ -14,8 +14,20 @@
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
     label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
     input{width:100%;padding:10px;border-radius:10px;border:1px solid #2b3b5f;background:#0e1626;color:var(--text)}
-    .btn{display:inline-block;margin-top:12px;padding:10px 14px;border-radius:10px;border:1px solid #2b3b5f;color:var(--text)}
-    .btn:hover{border-color:var(--accent)}
+.btn{
+  display:inline-block;
+  margin-top:12px;
+  padding:10px 16px;
+  border-radius:10px;
+  border:1px solid var(--accent);
+  background: var(--accent);   /* solid color so it pops */
+  color:#0b1220;               /* dark text on the blue */
+  font-weight:600;
+  cursor:pointer;
+}
+.btn:hover{ filter:brightness(0.95); }
+.btn:active{ transform: translateY(1px); }
+.btn:focus-visible{ outline:2px solid #fff; outline-offset:2px; }
     .row{display:flex;gap:16px;flex-wrap:wrap;margin-top:18px}
     .col{flex:1 1 200px}
     .num{font-variant-numeric: tabular-nums}
