@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mortgage Calculator — Azizli Finance</title>
+  <style>
+    :root { --bg:#0b1220; --card:#121a2a; --text:#e7ecf5; --muted:#9fb0c9; --accent:#4da3ff; --border:#1f2a44; }
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,Segoe UI,Roboto,Arial}
+    .wrap{max-width:920px;margin:40px auto;padding:0 20px}
+    a{color:var(--accent);text-decoration:none}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px}
+    h1{margin:0 0 16px 0}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+    input{width:100%;padding:10px;border-radius:10px;border:1px solid #2b3b5f;background:#0e1626;color:var(--text)}
+    .btn{display:inline-block;margin-top:12px;padding:10px 14px;border-radius:10px;border:1px solid #2b3b5f;color:var(--text)}
+    .btn:hover{border-color:var(--accent)}
+    .row{display:flex;gap:16px;flex-wrap:wrap;margin-top:18px}
+    .col{flex:1 1 200px}
+    .num{font-variant-numeric: tabular-nums}
+    footer{margin-top:24px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <p><a href="/">← Back to Azizli Finance</a></p>
+    <div class="card">
+      <h1>Mortgage Calculator</h1>
+      <div class="grid">
+        <div><label>Home price ($)</label><input id="price" type="number" value="500000" min="0"></div>
+        <div><label>Down payment (%)</label><input id="downPct" type="number" value="20" min="0" max="100" step="0.01"></div>
+        <div><label>Interest rate (APR %)</label><input id="rate" type="number" value="6.5" step="0.01"></div>
+        <div><label>Term (years)</label><input id="years" type="number" value="30" min="1" step="1"></div>
+        <div><label>Property tax (% of price / yr)</label><input id="taxPct" type="number" value="1.2" step="0.01"></div>
+        <div><label>Insurance ($/mo)</label><input id="ins" type="number" value="100" step="1"></div>
+        <div><label>HOA ($/mo)</label><input id="hoa" type="number" value="0" step="1"></div>
+      </div>
+      <button class="btn" onclick="calc()">Calculate</button>
+
+      <div class="row">
+        <div class="col">
+          <h3>Monthly payment</h3>
+          <div class="num" id="resultPmt">$—</div>
+          <small class="num" id="resultBreak"></small>
+        </div>
+        <div class="col">
+          <h3>Loan details</h3>
+          <div class="num" id="loanAmt">$—</div>
+          <small class="num" id="summary"></small>
+        </div>
+      </div>
+    </div>
+
+    <footer>Azizli Finance</footer>
+  </div>
+
+  <script>
+    const f = x => Number.isFinite(x) ? x : 0;
+    function fmt(n) { return n.toLocaleString(undefined,{style:'currency',currency:'USD',maximumFractionDigits:2}); }
+
+    function calc(){
+      const price   = f(parseFloat(document.getElementById('price').value));
+      const downPct = f(parseFloat(document.getElementById('downPct').value))/100.0;
+      const rate    = f(parseFloat(document.getElementById('rate').value))/100.0;
+      const years   = f(parseFloat(document.getElementById('years').value));
+      const taxPct  = f(parseFloat(document.getElementById('taxPct').value))/100.0;
+      const ins     = f(parseFloat(document.getElementById('ins').value));
+      const hoa     = f(parseFloat(document.getElementById('hoa').value));
+
+      const loan = price * (1 - downPct);
+      const n = Math.round(years*12);
+      const r = rate/12.0;
+      const pmtPI = (r>0) ? (r*loan)/(1 - Math.pow(1+r, -n)) : (loan/n);
+      const taxMo = price * taxPct / 12.0;
+      const total = pmtPI + taxMo + ins + hoa;
+
+      document.getElementById('loanAmt').textContent = fmt(loan);
+      document.getElementById('summary').textContent =
+        `P&I over ${years}y @ ${(rate*100).toFixed(2)}% APR`;
+      document.getElementById('resultPmt').textContent = fmt(total);
+      document.getElementById('resultBreak').textContent =
+        `P&I: ${fmt(pmtPI)}  •  Tax: ${fmt(taxMo)}  •  Ins: ${fmt(ins)}  •  HOA: ${fmt(hoa)}`;
+    }
+    calc(); // initial
+  </script>
+</body>
+</html>
