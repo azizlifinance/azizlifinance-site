@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stocks — Azizli Finance</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <style>
+    :root { --bg:#0b1220; --card:#121a2a; --text:#e7ecf5; --muted:#9fb0c9; --accent:#4da3ff; --border:#1f2a44; }
+    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,Segoe UI,Roboto,Arial}
+    .wrap{max-width:1100px;margin:40px auto;padding:0 20px}
+    a{color:var(--accent);text-decoration:none}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+    input,select{padding:10px;border-radius:10px;border:1px solid #2b3b5f;background:#0e1626;color:var(--text)}
+    .row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+    .btn{padding:10px 14px;border-radius:10px;border:1px solid var(--accent);background:var(--accent);color:#0b1220;font-weight:600;cursor:pointer}
+    .btn:hover{filter:brightness(0.95)}
+    .num{font-variant-numeric: tabular-nums}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <p><a href="/">← Back to Azizli Finance</a></p>
+    <div class="card">
+      <h1>Stocks</h1>
+
+      <div class="row">
+        <div>
+          <label>Ticker</label>
+          <input id="sym" value="AAPL" style="width:120px">
+        </div>
+        <div>
+          <label>Date (optional)</label>
+          <input id="date" type="date">
+        </div>
+        <div>
+          <label>Range</label>
+          <select id="rng">
+            <option>1D</option><option selected>5D</option><option>1M</option>
+            <option>6M</option><option>YTD</option><option>1Y</option>
+            <option>5Y</option><option>ALL</option>
+          </select>
+        </div>
+        <div style="display:flex;align-items:flex-end">
+          <label style="visibility:hidden">.</label>
+          <button class="btn" onclick="go()">Get</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <input type="checkbox" id="norm"><label for="norm">Normalize (%)</label>
+        </div>
+      </div>
+
+      <div id="out" class="num" style="margin:8px 0 14px 0"></div>
+      <div id="chart" style="height:460px"></div>
+    </div>
+  </div>
+
+<script>
+const API_URL = "https://azizli-stock-api.onrender.com"; // <-- replace with your Render URL
+
+async function go(){
+  const t = document.getElementById('sym').value.trim().toUpperCase();
+  const d = document.getElementById('date').value;
+  const r = document.getElementById('rng').value;
+  const norm = document.getElementById('norm').checked;
+
+  try{
+    const q = d ? `?ticker=${encodeURIComponent(t)}&date_str=${d}` : `?ticker=${encodeURIComponent(t)}`;
+    const res = await fetch(`${API_URL}/price${q}`);
+    const p = await res.json();
+    if(!res.ok) throw new Error(p.detail || "Price error");
+
+    document.getElementById('out').textContent =
+      `${p.ticker} (${p.name}) — $${p.price.toFixed(2)}  Δ $${p.change.toFixed(2)} (${p.pct.toFixed(2)}%) · ${p.basis}`;
+
+    const rh = await fetch(`${API_URL}/history?ticker=${encodeURIComponent(t)}&range=${encodeURIComponent(r)}&normalize=${norm}`);
+    const h = await rh.json();
+    if(!rh.ok) throw new Error(h.detail || "History error");
+
+    Plotly.newPlot('chart', [{
+      x: h.x, y: h.y, mode: 'lines', name: t, hovertemplate: '%{x}<br>%{y:.2f}<extra></extra>'
+    }], {
+      title: `${t} — ${r}${norm ? ' (normalized)' : ''}`,
+      xaxis: {title: 'Date/Time'},
+      yaxis: {title: norm ? '% from start' : 'Price'},
+      margin: {l:50,r:10,t:50,b:40}
+    }, {displayModeBar:false});
+  }catch(e){
+    document.getElementById('out').textContent = e.message;
+    Plotly.purge('chart');
+  }
+}
+go();
+</script>
+</body>
+</html>
